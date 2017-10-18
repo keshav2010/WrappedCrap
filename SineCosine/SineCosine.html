@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>App1</title>
+  <style>
+  body{
+    background-color:#33134c;
+  }
+  canvas{
+    background-color:#C5C5C5;
+    border:double;
+    border-width: 10px;
+    border-color:#030A25;
+  }
+  #mainHeading{
+    transition-duration: 0.5s;
+    color:#558965;
+    font-style: italic;
+  }
+  #mainHeading:hover{
+    color:#D1E50F;
+    font-style:normal;
+    font-size: 40px;
+  }
+  section{
+    background-color:white;
+  }
+  </style>
+  <script > /* handles the drawing on the canvas */
+  var x=10;
+  var y=10;
+  var canvasRef;
+  var canvasContext;
+
+  //target object is what we will be drawing on screen and what end user will see
+  /*
+    Supported Fxns :
+      renderMe()
+      updateMe(x,y,size)
+  */
+  var target =
+  {
+    shape_type:"circle",
+    position_x:0.0,
+    position_y:0.0,
+    size:10, /* radius */
+    color:"blue",
+    renderMe: function(){
+
+      canvasContext.beginPath();
+      canvasContext.fillStyle=this.color;
+      canvasContext.arc(this.position_x,this.position_y,this.size,0,2*Math.PI);
+      canvasContext.stroke();
+      canvasContext.fill();
+    },
+    updateMe: function(_x,_y, _size){
+      this.position_y= _y;
+      this.position_x = _x;
+      this.size = _size;
+    },
+
+    debug: function(){
+      console.log(" posx : "+this.position_x + " and posy : "+ this.position_y+ " and size : "+ this.size);
+    }
+  };
+
+  var time = 0.0; //The Time Variable
+  var freq = 0.1; //The Frequency
+  var amp = 25; //The Amplitude
+  var RUN=true;
+  window.onload = main;
+  function main(){
+
+ 	//window.requestAnimationFrame(step);
+ 	target.position_x=target.position_y=target.size=0;
+ 	setInterval(update,10);
+ 	setInterval(step,1);
+  }
+  function update(){
+  	if(RUN){
+  	target.position_x++;
+  	target.position_y = 225+amp*Math.sin(time*freq);
+  	time=time+1;
+  	target.size=10;//10*Math.sin(target.position_y*0.1)*Math.sin(target.position_y*0.1);
+  	if(target.position_x>450)
+  		RUN=false;
+  	/*if(target.position_y>450||target.position_x>450)
+  		alert("Yet to handle termination, better reset now");
+  	*/
+  	}
+  	else{
+  		target.position_x=0;
+  		target.position_y=0;
+  		target.size=0;
+  	}
+  }
+  function step(){
+  	if(RUN){
+    console.log("main execution started");
+    canvasRef = document.getElementById("myCanvas");
+    target.debug();
+    if (canvasRef.getContext) {
+      	canvasContext = canvasRef.getContext('2d');
+      	target.color="red";
+	  	target.updateMe(target.position_x,target.position_y,target.size, target.color);
+      	target.renderMe();
+	  }
+      else {
+      // canvas-unsupported code here
+      alert("canvas not supported, Use updated browser");
+    }
+	}//if run
+  }
+
+  </script>
+</head>
+<body>
+  <center><h1 id="mainHeading"> Sine-Cosine Visualization </h1><br>
+
+  <canvas id="myCanvas" width="450" height="450">
+
+  </canvas>
+  <section>
+    A Tiny app to visualize use of trignometric ratios in animation purpose<br>
+    nothing too fancy here anyway :/
+  </section>
+</center>
+</body>
+</html>
