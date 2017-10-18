@@ -11,6 +11,7 @@
     border:double;
     border-width: 10px;
     border-color:#030A25;
+    float:left;
   }
   #mainHeading{
     transition-duration: 0.5s;
@@ -22,9 +23,21 @@
     font-style:normal;
     font-size: 40px;
   }
-  section{
+  div#footer{
     background-color:white;
+    clear:both;
   }
+  div#controller{
+    background-color: black;
+    color:white;
+    float:left;
+    margin-left: 50px;
+    padding: 20px;
+    transition-duration: 0.2s;
+    border-style:solid;
+    border-color: red;
+  }
+  
   </style>
   <script > /* handles the drawing on the canvas */
   var x=10;
@@ -117,13 +130,18 @@
 <body>
   <center><h1 id="mainHeading"> Sine-Cosine Visualization </h1><br>
 
-  <canvas id="myCanvas" width="450" height="450">
-
-  </canvas>
-  <section>
+  <canvas id="myCanvas" width="450" height="450">  </canvas>
+  <div id="controller">
+    Frequency <input type="text" id="input_freq"><br><br>
+    Amplitude <input type="text" id="input_amp"><br><br>
+    Wave Form (sine or cosine) <input type="text" id="input_choice"><br>
+    <br>
+    <button type="submit" id="btn_submit" onclick="alert('not implemented right now')"> Submit and Restart </button>
+  </div>
+  <div id="footer">
     A Tiny app to visualize use of trignometric ratios in animation purpose<br>
     nothing too fancy here anyway :/
-  </section>
+  </div>
 </center>
 </body>
 </html>
