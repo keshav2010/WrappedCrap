@@ -106,23 +106,26 @@
   		target.size=0;
   	}
   }
-  function step(){
-  	if(RUN){
-    update();
+  function render(){
     console.log("main execution started");
     canvasRef = document.getElementById("myCanvas");
     target.debug();
     if (canvasRef.getContext) {
-      	canvasContext = canvasRef.getContext('2d');
-      	target.color="red";
-	  	target.updateMe(target.position_x,target.position_y,target.size, target.color);
-      	target.renderMe();
-	  }
+        canvasContext = canvasRef.getContext('2d');
+        target.color="red";
+      target.updateMe(target.position_x,target.position_y,target.size, target.color);
+        target.renderMe();
+    }
       else {
       // canvas-unsupported code here
       alert("canvas not supported, Use updated browser");
     }
-	}//if run
+  }
+  function step(){
+  	if( RUN ){
+      update();
+      render();
+	  }//if run
   }
 
   </script>
