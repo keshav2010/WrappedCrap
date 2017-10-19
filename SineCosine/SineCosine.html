@@ -37,7 +37,7 @@
     border-style:solid;
     border-color: red;
   }
-  
+
   </style>
   <script > /* handles the drawing on the canvas */
   var x=10;
@@ -56,64 +56,95 @@
     shape_type:"circle",
     position_x:0.0,
     position_y:0.0,
-    size:10, /* radius */
-    color:"blue",
+    Size:10, /* radius */
+    Color:"blue",
+    reset:function(){
+      this.shape_type="circle";
+      this.position_x=0.0;
+      this.position_y=0.0;
+      this.Size=0;
+      //this.Color="blue";
+    },
     renderMe: function(){
 
       canvasContext.beginPath();
-      canvasContext.fillStyle=this.color;
-      canvasContext.arc(this.position_x,this.position_y,this.size,0,2*Math.PI);
+      canvasContext.fillStyle= this.Color;
+      canvasContext.arc(this.position_x,this.position_y,this.Size,0,2*Math.PI);
       canvasContext.stroke();
       canvasContext.fill();
     },
-    updateMe: function(_x,_y, _size){
+    updateMe: function(_x,_y, _size, _color){
       this.position_y= _y;
       this.position_x = _x;
-      this.size = _size;
+      this.Size = _size;
+      this.Color=_color;
     },
 
     debug: function(){
-      console.log(" posx : "+this.position_x + " and posy : "+ this.position_y+ " and size : "+ this.size);
+      console.log(" posx : "+this.position_x + " and posy : "+ this.position_y+ " and size : "+ this.Size + this.Color);
     }
   };
 
   var time = 0.0; //The Time Variable
-  var freq = 0.05; //The Frequency
+  var freq = 0.01; //The Frequency
   var amp = 25; //The Amplitude
   var RUN=true;
   window.onload = main;
-  function main(){
 
- 	//window.requestAnimationFrame(step);
- 	target.position_x=target.position_y=target.size=0;
- 	setInterval(step,5);
+  function setupUserInput(){
+    freq = parseFloat(document.getElementById("input_freq").value)/10;
+    amp = parseFloat(document.getElementById("input_amp").value);
+    target.Color = document.getElementById('input_color').value.trim();
+    if(document.getElementById("input_freq").value.trim() == "" || document.getElementById("input_amp").value.trim() == "")
+    {
+      alert("must enter both Frequency and amplitude");
+
+    }
+    else
+    {
+      if(document.getElementById('input_color').value.trim() == "")
+        target.Color="red";
+      if(canvasContext)
+      {  canvasContext.clearRect(0, 0, 450, 450);
+         target.reset();
+         RUN=true;
+      }
+      else {
+        canvasRef = document.getElementById('myCanvas');
+        canvasContext = canvasRef.getContext('2d');
+        canvasContext.clearRect(0,0,450,450);
+        target.reset();
+        RUN=true;
+      }
+    }
+  }
+  function main(){
+    target.reset();
+    RUN=false;
+ 	  setInterval(step,16);// 1 frame in 16 ms , or 60 frames in ~ 1s
   }
   function update(){
   	if(RUN){
   	target.position_x++;
   	target.position_y = 225+amp*Math.sin(time*freq);
   	time=time+1;
-  	target.size=5+10*Math.sin(time*freq)*Math.sin(time*freq);//10*Math.sin(target.position_y*0.1)*Math.sin(target.position_y*0.1);
-  	if(target.position_x>450)
+  	target.Size=5+10*Math.sin(time*freq)*Math.sin(time*freq);//10*Math.sin(target.position_y*0.1)*Math.sin(target.position_y*0.1);
+
+    if(target.position_x>450)
   		RUN=false;
-  	/*if(target.position_y>450||target.position_x>450)
-  		alert("Yet to handle termination, better reset now");
-  	*/
+
   	}
   	else{
-  		target.position_x=0;
-  		target.position_y=0;
-  		target.size=0;
+  		target.reset();
   	}
   }
   function render(){
     console.log("main execution started");
-    canvasRef = document.getElementById("myCanvas");
+    canvasRef = document.getElementById("myCanvas"); // this shall not be required anymore due to control panel's setupUserInput
     target.debug();
     if (canvasRef.getContext) {
         canvasContext = canvasRef.getContext('2d');
-        target.color="red";
-      target.updateMe(target.position_x,target.position_y,target.size, target.color);
+        target.updateMe(target.position_x,target.position_y,target.Size, target.Color);
         target.renderMe();
     }
       else {
@@ -135,15 +166,14 @@
 
   <canvas id="myCanvas" width="450" height="450">  </canvas>
   <div id="controller">
-    Frequency <input type="text" id="input_freq"><br><br>
-    Amplitude <input type="text" id="input_amp"><br><br>
-    Wave Form (sine or cosine) <input type="text" id="input_choice"><br>
-    <br>
-    <button type="submit" id="btn_submit" onclick="alert('not implemented right now')"> Submit and Restart </button>
+    Frequency <input type="text" id="input_freq" value="1"><br><br>
+    Amplitude <input type="text" id="input_amp" value="10"><br><br>
+    <!-- Wave Form (sine or cosine) <input type="text" id="input_choice"><br> -->
+    Color <input type="text" id="input_color" value="green"><br><br>
+    <button type="submit" id="btn_submit" onclick="setupUserInput()"> RUN </button>
   </div>
   <div id="footer">
-    A Tiny app to visualize use of trignometric ratios in animation purpose<br>
-    nothing too fancy here anyway :/
+    Roses are red, voilets are blue, u can read the code, no variable named foo<br>
   </div>
 </center>
 </body>
