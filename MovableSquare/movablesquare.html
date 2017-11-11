@@ -1,0 +1,80 @@
+<!-- Don't judge me plz XD -->
+<!-- This sucks i know -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Movable Square</title>
+	<script src="mainScript.js"></script>
+	<style>
+	body{
+		background-color: #2C2C2C;
+	}
+		#mainheading
+		{
+			background-color: black;
+			color:white;
+			font-family: Courier;
+			font-size:30px;
+			transition-duration: 0.2s;
+		}
+		#mainheading:hover
+		{
+			font-size:34px;
+			color:yellow;
+		}
+		a{
+			text-decoration: none;
+			color:red;
+			font-size: 25px;
+		}
+		#btn{
+			background-color: black;
+			padding:5px;
+			border-style: double;
+			border-color: white;
+			transition-duration: 0.2s;
+			clear: both;
+		}
+		#btn:hover{
+			color:black;
+			border-color:black;
+			padding-left: 30px;
+			background-color: white;
+		}
+		#myCanvas{
+			background-color: black;
+			float:left;
+			border-style: solid;
+			border-width: 5px;
+			border-color: white;
+			transition-duration: 1s;
+		}
+		#myCanvas:hover{
+			border-color: #4FF045;
+		}
+		#info{
+			float: left;
+			padding: 1%;
+			font-size: 20px;
+		}
+		#controlPanel
+		{
+			border-style: solid;
+			border-color: red;
+			clear:both;
+		}
+	</style>
+</head>
+
+<body>
+	<center>
+	<h1 id="mainheading"> Movable Square </h1>
+	</center>
+	<canvas id="myCanvas" width="500" height="500"></canvas>
+	<div id="info"> <font color="white">Arrows Key to Move Around </font>
+	<br><br><br><font color="red">WIP : VelocityX component fails to approach to 0 when VelocityY component is changing and Vice versa
+	</font></div>
+	<div id="btn"><a href="../index.html">Back to Menu</a></div>
+</body>
+
+</html>
