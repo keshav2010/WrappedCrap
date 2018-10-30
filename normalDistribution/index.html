@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+       
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/processing.js/1.6.0/processing.min.js"></script>
+        <title> Normal Distribution Plotter </title>
+        <style>
+            body{
+                background-color:black;
+                margin:20px;
+            }
+        </style>
+        
+    </head>
+    <body>
+    
+    <div class="container">
+        <div class="page-header">
+            <center><h1 style="color:rgb(100,200,10)"> Normal Distribution Plotter </h1><br>
+                <i><h3 style="color:antiquewhite"> using ProcessingJS</h3></i></center>
+        </div>
+        <div class="container-fluid">
+           <div class="row" style='background-color: white; margin-bottom: 10px; padding-left: 5px'>
+               <h4>Horizontal Axis represents "MEAN" in integer range [0, 50] <br>
+                   Vertical Axis represents "STANDARD DEVIATION", in integer range [0, 20] <br>
+                   
+                   Move your mouse to alter mean and standard Deviation and see how it affects the blob, 
+                   <br> Moving toward bottom right means higher deviation as well as mean <br>
+                        Moving toward top left lowers deviation and mean</h4>
+    
+           </div>
+            <div class="row" style="color:white; font-size: 1.5em;">
+                <p id="outputLog"></p>
+               <p id='outputRadius'></p><p id='outputMaxRadius'></p><p id='outputMinRadius'></p>
+               <div class="col-md-12">
+                  <script type="application/processing">
+                   var ready=false;
+                   var width = 1000, height = 400;
+
+                    var maxSoFar = 0;
+                    var minSoFar = 1000;
+                    
+                   void setup(){
+                     size(width, height);
+                     backgroundShade = random(255);
+                     frameRate(60);
+                   }
+                   void draw(){
+                   background();
+                   strokeWeight((mouseX/width)*5 + 1);
+                    var mean = floor((mouseX/width)*50);
+                    var standardDeviation = floor((mouseY/height)*20);
+                    if(mean<0)
+                        mean = -mean;
+                    if(standardDeviation < 0)
+                        standardDeviation = -standardDeviation;
+                    
+                    var num = randomGaussian() * standardDeviation + mean;
+                    if(num<0)   num=-num;
+                    fill(mean, num, 255);
+                    ellipse(mouseX, mouseY, num, num);
+                    if(num > maxSoFar) maxSoFar = num;
+                    if(num < minSoFar) minSoFar = num;
+                    document.getElementById('outputRadius').innerHTML = "Output Radius (floored):" + floor(num);
+                    document.getElementById('outputMaxRadius').innerHTML = "Max Radius So Far : " + maxSoFar;
+                    document.getElementById('outputMinRadius').innerHTML = "Min Radius So Far : " + minSoFar;
+                    document.getElementById('outputLog').innerHTML = "Mean is " + mean + " and Standard Deviation : "+standardDeviation;
+                   }
+
+                   
+               </script>
+                <canvas id="sketch"></canvas>    
+               </div>
+                
+            </div>
+        </div>
+    </div>  
+     
+    </body>
+</html>
