@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title> 3D Basic Renderer </title>
+</head>
+
+<body>
+  <h1> 3D Orthographic Renderer [WORK IN PROGRESS] </h1>
+  <h3> Written using JavaScript</h3>
+  <a href="https://en.wikipedia.org/wiki/Rotation_matrix"> Rotation Formula Here </a>
+  <hr>
+
+  <canvas id="c" style="float:left">
+  </canvas>
+
+  <div style="float:left; padding:10px; margin-left:10px; background-color:black; color:white; ">
+
+    Position On X : <p id="x_pos" style="border-style:solid; border-width:1px; display:inline-block">50</p>
+    <input id="posX_slider" type='range' min="0" max="100" value="50" oninput="outputValue(this)">    </input>
+    <br>
+    Position On Y : <p id="y_pos" style="border-style:solid; border-width:1px; display:inline-block">50</p>
+    <input id="posY_slider" type='range' min="0" max="100" value="50" oninput="outputValue(this)">    </input>
+    <br>
+    Position On Z (won't work in ortho) : <p id="z_pos" style="border-style:solid; border-width:1px; display:inline-block">50</p>
+    <input id="posZ_slider" type='range' min="0" max="100" value="50" oninput="outputValue(this)">    </input>
+    <br>
+
+    <hr>
+
+  </div>
+  <script>
+
+    var ctx = (document.getElementById("c")).getContext('2d');
+
+    //2d point constructor
+    const Vert2D = function(x, y)
+    {
+      this.x = x;
+      this.y = y;
+      this.addValue = function(x,y)
+      {
+        this.x += x;
+        this.y += y;
+      }
+    };
+
+    //3d point constructor
+    const Vert3D = function(x, y, z)
+    {
+      this.x = x;
+      this.y = y;
+      this.z = z;
+      this.addValue = function(x, y, z)
+      {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+      };
+    };
+
+    var canvasHeight=450;
+    var canvasWidth=450;
+    ctx.canvas.height = canvasHeight;
+    ctx.canvas.width = canvasWidth;
+
+    //Modify this object's vertices and faces data to build any 3d polygon
+    const SampleObject = function(x,y,z, size)
+    {
+      this.Vertices = [
+        /*0*/new Vert3D(x-size, y-size, z-size), //top-left (front)
+        /*1*/new Vert3D(x+size, y-size, z-size), //top-right (front)
+        /*2*/new Vert3D(x-size, y+size, z-size), //bottom-left (frnt)
+        /*3*/new Vert3D(x+size, y+size, z-size), //bottom-right (front)
+
+        /*4*/new Vert3D(x-size, y-size, z+size), //top-left (back)
+        /*5*/new Vert3D(x+size, y-size, z+size), //top-riht(back)
+        /*6*/new Vert3D(x-size, y+size, z+size), //bottom-left (back)
+        /*7*/new Vert3D(x+size, y+size, z+size) //bottom-right (bck)
+      ];
+      this.Faces = [
+        [0, 1, 3, 2], //front face
+        [4, 5, 7, 6], //back face
+        [0, 2, 6, 4], //left face
+        [1, 3, 7, 5], //right face
+        [0, 1, 5, 4], //top face
+        [2, 3, 7, 6] //bottom face
+      ];
+      this.rotateOnX  = function(radAngle)
+      {
+        let sine = Math.sin(radAngle);
+        let cosine = Math.cos(radAngle);
+        for(let i = 0; i<this.Vertices.length; i++)
+        {
+          let temp = this.Vertices[i];
+          let newY = temp.y* cosine - temp.z*sine;
+          let newZ = temp.y* sine + temp.z* cosine;
+          this.Vertices[i].y = newY;
+          this.Vertices[i].z = newZ;
+        }
+      }
+      this.rotateOnZ = function(radAngle)
+      {
+        let sin = Math.sin(radAngle);
+        let cosine = Math.cos(radAngle);
+
+        for(let i = 0; i<this.Vertices.length; i++)
+        {
+          let temp = this.Vertices[i];
+          let newX = temp.x* cosine - temp.y*sin;
+          let newY = temp.x* sin + temp.y* cosine;
+          this.Vertices[i].x = newX;
+          this.Vertices[i].y = newY;
+        }
+      }
+      this.addToPosition = function(x,y,z)
+      {
+        for(let i=0; i < this.Vertices.length; i++)
+        this.Vertices[i].addValue(x,y,z);
+      };
+
+      this.drawMesh = function(context)
+      {
+        //for each face
+        for(let i=0; i<this.Faces.length; i++)
+        {
+          let face = this.Faces[i];
+          context.beginPath();
+          context.strokeStyle="red";
+          context.lineWidth=1;
+          //for each vertex for this face, draw a line
+          for(let i=0; i<face.length; i++)
+          {
+            let p = this.Vertices[face[i]];
+            let newX = p.x;
+            let newY = p.y;
+
+            {
+              newX = p.x;// + (110/p.z);
+              newY= p.y;// + (110/p.z);
+            }
+            if(i == 0)
+              context.moveTo(newX, newY);
+            else context.lineTo(newX, newY);
+          }
+
+          context.closePath();
+          context.stroke();
+        }
+      };
+
+    };
+
+    //-------------------------------------------------------------------
+
+
+    var mesh1 = new SampleObject(120, 120,1, 50);
+    function loop()
+    {
+      window.requestAnimationFrame(loop);
+      ctx.fillStyle='rgb(100,100,250)'
+      ctx.fillRect(0,0, canvasWidth, canvasHeight);
+      mesh1.rotateOnX(0.01);
+      mesh1.rotateOnZ(0.01);
+      ctx.fillStyle = 'red';
+      mesh1.drawMesh(ctx);
+    }
+
+    loop();
+
+
+  //UI related code
+  function outputValue(slider){
+    if(slider.id == 'posX_slider')
+    {
+      document.getElementById('x_pos').innerHTML =slider.value;
+    }
+    else if(slider.id == 'posY_slider')
+    {
+      document.getElementById('y_pos').innerHTML =slider.value;
+    }
+    else if(slider.id == 'posZ_slider')
+    {
+      document.getElementById('z_pos').innerHTML =slider.value;
+    }
+  }
+  </script>
+
+</body>
+</html>
