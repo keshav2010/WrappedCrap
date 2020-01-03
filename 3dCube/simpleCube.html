@@ -126,7 +126,7 @@
           let face = this.Faces[i];
           context.beginPath();
           context.strokeStyle="red";
-          context.lineWidth=1;
+          context.lineWidth=2;
           //for each vertex for this face, draw a line
           for(let i=0; i<face.length; i++)
           {
@@ -134,10 +134,6 @@
             let newX = p.x;
             let newY = p.y;
 
-            {
-              newX = p.x;// + (110/p.z);
-              newY= p.y;// + (110/p.z);
-            }
             if(i == 0)
               context.moveTo(newX, newY);
             else context.lineTo(newX, newY);
@@ -153,14 +149,14 @@
     //-------------------------------------------------------------------
 
 
-    var mesh1 = new SampleObject(120, 120,1, 50);
+    var mesh1 = new SampleObject(10, 10,1, 50);
     function loop()
     {
       window.requestAnimationFrame(loop);
-      ctx.fillStyle='rgb(100,100,250)'
+      ctx.fillStyle='rgb(20,100,250)'
       ctx.fillRect(0,0, canvasWidth, canvasHeight);
-      mesh1.rotateOnX(0.01);
-      mesh1.rotateOnZ(0.01);
+      mesh1.rotateOnX(0.02);
+      mesh1.rotateOnZ(0.03);
       ctx.fillStyle = 'red';
       mesh1.drawMesh(ctx);
     }
