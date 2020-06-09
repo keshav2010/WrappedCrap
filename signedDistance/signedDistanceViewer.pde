@@ -1,10 +1,10 @@
 
-class Circle 
+class Circle
 {
   PVector pos;
   float diameter;
   float radius;
-  
+
   color renderColor = color(225,25,25);
   color fillColor;
   public Circle(PVector pos, float d)
@@ -26,7 +26,6 @@ ArrayList<Circle> sceneObjects = new ArrayList<Circle>();
 float signDistCircle(PVector mousePos, Circle circle)
 {
   float dist_centers =(PVector.sub(circle.pos, mousePos)).mag();
-  print(dist_centers- circle.radius ); print("\n");
   return (dist_centers - circle.radius);
 }
 void setup()
@@ -44,7 +43,7 @@ void draw()
   background(255);
   float minRad=1000;
   Circle currentComparator = sceneObjects.get(0);
-  
+
   for(int i=0; i<sceneObjects.size(); i++)
   {
     sceneObjects.get(i).render();
@@ -58,5 +57,5 @@ void draw()
   fill(color(125,125,125));
   ellipse(mouseX, mouseY, minRad*2, minRad*2);
   line(mouseX, mouseY, currentComparator.pos.x, currentComparator.pos.y);
-  
+
 }
